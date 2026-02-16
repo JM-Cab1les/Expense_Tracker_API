@@ -25,6 +25,7 @@ namespace ExpenseTracker.Infrastructure
             services.AddScoped<IExpensesRepository, ExpenseRepositories>();
             services.AddScoped<IUserRepository, UserRepositories>();
             services.AddScoped<IBudgetRepository, BudgetRepositories>();
+            services.AddScoped<ISavingRepository, SavingsRepositories>();
             services.AddScoped<JwtTokenHelper>();
 
             return services;

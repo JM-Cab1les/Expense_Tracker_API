@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 using ExpenseTracker.Domain.Entities;
-using ExpenseTracker.Infrastructure.Persistence;
+using ExpenseTracker.Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTracker.Infrastructure.Persistence;
@@ -25,13 +25,15 @@ public partial class ExpenseTracker_DBContext : DbContext
 
     public virtual DbSet<RecurringExpense> RecurringExpenses { get; set; }
 
+    public virtual DbSet<Saving> Savings { get; set; }
+
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AuditTrail>(entity =>
         {
-            entity.ToTable("AuditTrail");   
+            entity.ToTable("AuditTrail");
 
             entity.Property(e => e.Action).HasMaxLength(50);
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
@@ -46,9 +48,7 @@ public partial class ExpenseTracker_DBContext : DbContext
                 .HasMaxLength(10)
                 .IsUnicode(false)
                 .IsFixedLength();
-            entity.Property(e => e.Timestamp)
-                .HasMaxLength(10)
-                .IsFixedLength();
+            entity.Property(e => e.Timestamp).HasColumnType("datetime");
         });
 
         modelBuilder.Entity<Category>(entity =>
@@ -65,7 +65,8 @@ public partial class ExpenseTracker_DBContext : DbContext
             entity.Property(e => e.CreatedDate).HasColumnType("datetime");
             entity.Property(e => e.Currency)
                 .HasMaxLength(10)
-                .IsUnicode(false);
+                .IsUnicode(false)
+                .IsFixedLength();
             entity.Property(e => e.Description).HasMaxLength(255);
             entity.Property(e => e.ExpenseDate).HasColumnType("datetime");
             entity.Property(e => e.Timestamp).HasColumnType("datetime");
@@ -80,6 +81,17 @@ public partial class ExpenseTracker_DBContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength();
             entity.Property(e => e.Description).HasMaxLength(100);
+            entity.Property(e => e.Timestamp).HasColumnType("datetime");
+        });
+
+        modelBuilder.Entity<Saving>(entity =>
+        {
+            entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
+            entity.Property(e => e.Currency)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .IsFixedLength();
             entity.Property(e => e.Timestamp).HasColumnType("datetime");
         });
 
